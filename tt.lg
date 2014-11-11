@@ -1,0 +1,89 @@
+to tt :filename
+load :filename
+localmake "test.proc tt.get.test.proc
+localmake "fail.tests 0
+localmake "fail.proc []
+if defined? "before.all.test [before.all.test]
+tt.run.test
+tt.print.result
+end
+
+to tt.get.test.proc
+localmake "ret []
+foreach procedures [if tt.test.proc? ? [make "ret lput ? :ret]]
+output :ret
+end
+
+to tt.test.proc? :procname
+output and (first :procname) = "t (first bf :procname) = ".
+end
+
+to tt.run.test
+foreach :test.proc [
+  localmake "current.proc ?
+  localmake "current.state "ok
+  catch "assert.fail [run ?]
+  ifelse :current.state = "ok [type ".] [type "F]
+]
+end
+
+to tt.print.result
+print "
+foreach :fail.proc [
+  print first ?
+  (show "|  expected:| first bf ?)
+  (show "|  recieved:| last ?)
+]
+print " (print (count :test.proc) "tests. :fail.tests "fail.)
+end
+
+to tt.fail :expected :recieved
+make "fail.proc lput (list :current.proc :expected :recieved) :fail.proc
+make "current.state "fail
+make "fail.tests :fail.tests + 1
+throw "assert.fail
+end
+
+;----------------------------------------------------------------------
+; Assertions
+
+to assert.true :boolean
+if :boolean = "false [tt.fail "true "false]
+end
+
+to assert.equal :expected :value
+if :expected <> :value [tt.fail :expected :value]
+end
+
+to assert.in :list :value
+if (member? :value :list) = "false [tt.fail (se "a "value "in :list) :value]
+end
+
+to assert.array :data
+if not (array? :data) [
+  if list? :data [tt.fail "Array "List]
+  if word? :data [tt.fail "Array "Word]
+]
+end
+
+to assert.list :data
+if not (list? :data) [
+  if array? :data [tt.fail "List "Array]
+  if word? :data [tt.fail "List "Word]
+]
+end
+
+to assert.word :data
+if not (word? :data) [
+  if array? :data [tt.fail "Word "Array]
+  if list? :data [tt.fail "Word "List]
+]
+end
+
+to assert.number :data
+if not (number? :data) [tt.fail "Number :data]
+end
+
+bury [tt tt.get.test.proc tt.test.proc? tt.run.test tt.print.result tt.fail
+assert.true assert.equal assert.in assert.array assert.list assert.word
+assert.number]
