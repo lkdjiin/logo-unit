@@ -4,9 +4,6 @@ Logo Unit Testing
 The `tt` procedure is a unit testing framework for the logo programming
 language.
 
-More information in the user manual.
-
-
 Getting Started
 -----------------------------------------------------------------------
 
@@ -16,19 +13,19 @@ doesn't exist.
 
 Create a file for the tests, for example `test.math.lg`:
 
-$ ls
-math.lg
-test.math.lg
+    $ ls
+    math.lg
+    test.math.lg
 
 The first thing to do in `test.math.lg` is to load the source file:
 
-``` logo test.math.lg
+```
 load "math.lg
 ```
 
 Now write your first test:
 
-``` logo test.math.lg
+```
 load "math.lg
 
 to t.abs.outputs.a.number
@@ -46,7 +43,7 @@ To run the test(s), open logo and call `tt` with the name of the test file:
 
 The error message is clear: `abs` doesn't exist. So we create it in `math.lg`:
 
-``` logo math.lg
+```
 to abs :num
 output :num
 end
@@ -64,7 +61,7 @@ We did it!
 
 Add a second test to deal with negative numbers:
 
-``` logo test.math.lg
+```
 to t.abs.outputs.the.right.value
 assert.equal 17 abs -17
 end
@@ -83,7 +80,7 @@ Test again:
 
 Fix it:
 
-``` logo math.lg
+```
 to abs :num
 ifelse :num < 0 [output 0 - :num] [output :num]
 end
@@ -96,8 +93,6 @@ And that's it.
 
     2 tests. 0 fail.
     ?
-
-More information in the user manual.
 
 Install
 -----------------------------------------------------------------------
